@@ -1,0 +1,11 @@
+{
+    "name": "com.alexis-brusle.scene-switcher",
+    "displayName":"Scene Switcher",
+    "version": "0.1.0",
+    "unity":"2019.1",
+    "author": {
+        "name": "Alexis Brusle",
+        "email": "alexis.brusle@gmail.com",
+        "url": "https://github.com/abrusle"
+    }
+}

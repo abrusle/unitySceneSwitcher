@@ -1,5 +1,5 @@
 {
-    "name": "AlexisBrusle.Editor.SceneSwitcher",
+    "name": "Unity.SceneSwitcher.Editor",
     "optionalUnityReferences": [],
     "includePlatforms": [
         "Editor"
