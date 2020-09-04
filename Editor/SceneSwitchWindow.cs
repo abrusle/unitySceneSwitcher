@@ -9,6 +9,7 @@ namespace AlexisBrusle.Editor.SceneSwitcher
     {
         private static string[] _cachedScenePaths;
         private static string _activeScenePath;
+        private Texture2D normalBackground;
 
         private static SceneSwitchWindow Window => GetWindow<SceneSwitchWindow>();
         
@@ -29,6 +30,7 @@ namespace AlexisBrusle.Editor.SceneSwitcher
             Init();
             EditorSceneManager.sceneOpened += OnSceneOpened;
             SceneSwitchConfigWindow.ConfigurationSaved += Refresh;
+            normalBackground = Texture2D.redTexture;
         }
 
         private void OnDisable()
@@ -129,7 +131,19 @@ namespace AlexisBrusle.Editor.SceneSwitcher
                     : "ButtonMid";
             var style = new GUIStyle(baseStyle);
             if (_activeScenePath == scenePath)
+            {
+#if UNITY_2019_3_OR_NEWER
+                GUI.backgroundColor = new Color(0.52f, 0.52f, 0.52f);
+                style.normal.textColor = style.hover.textColor = Color.white;
+            }
+            else
+            {
+                GUI.backgroundColor = Color.white;
+            }
+            #else
                 style.normal.background = style.active.background;
+            }
+#endif
             return style;
         }
     }

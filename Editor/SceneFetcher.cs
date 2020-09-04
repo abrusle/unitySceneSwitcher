@@ -16,12 +16,15 @@ namespace AlexisBrusle.Editor.SceneSwitcher
                 if (!EditorPrefs.HasKey(EditorPrefKey))
                     ScenePaths = new string[0];
                 var json = EditorPrefs.GetString(EditorPrefKey);
-                return JsonUtility.FromJson<string[]>(json);
+                var data = JsonUtility.FromJson<SaveData>(json);
+                Debug.Log("Get: " + json);
+                return data.scenePaths ?? new string[0];
             }
             private set
             {
-                string json = JsonUtility.ToJson(value);
+                var json = EditorJsonUtility.ToJson(new SaveData{scenePaths = value});
                 EditorPrefs.SetString(EditorPrefKey, json);
+                Debug.Log("Set: " + json);
             }
         }
         
@@ -34,6 +37,17 @@ namespace AlexisBrusle.Editor.SceneSwitcher
                 .ToArray();
         }
 
+        [MenuItem("Tools/Scene Switcher/Clear EditorPrefs Data")]
+        private static void ClearSavedScenes()
+        {
+            if (EditorUtility.DisplayDialog("Delete Scene Switcher preferences.",
+                "Are you sure you want to delete all Scene Switcher editor preferences? " +
+                "This action cannot be undone.", "Yes", "No"))
+            {
+                EditorPrefs.DeleteKey(EditorPrefKey);
+            }
+        }
+
         [MenuItem("CONTEXT/SceneAsset/Add to Scene Switcher")]
         [MenuItem("Assets/Add to Scene Switcher", false, 111)]
         private static void AddSceneFromEditorUi(MenuCommand cmd)
@@ -41,6 +55,12 @@ namespace AlexisBrusle.Editor.SceneSwitcher
             if (!(Selection.activeObject is SceneAsset sceneAsset)) return;
             ScenePaths = ScenePaths.Append(AssetDatabase.GetAssetPath(sceneAsset)).ToArray();
             SceneSwitchWindow.Refresh();
+        }
+
+        [System.Serializable]
+        private struct SaveData
+        {
+            public string[] scenePaths;
         }
     }
 }
