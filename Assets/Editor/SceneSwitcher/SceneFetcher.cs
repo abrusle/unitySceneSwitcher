@@ -33,5 +33,14 @@ namespace AlexisBrusle.Editor.SceneSwitcher
                 .Select(AssetDatabase.GetAssetPath)
                 .ToArray();
         }
+
+        [MenuItem("CONTEXT/SceneAsset/Add to Scene Switcher")]
+        [MenuItem("Assets/Add to Scene Switcher", false, 111)]
+        private static void AddSceneFromEditorUi(MenuCommand cmd)
+        {
+            if (!(Selection.activeObject is SceneAsset sceneAsset)) return;
+            ScenePaths = ScenePaths.Append(AssetDatabase.GetAssetPath(sceneAsset)).ToArray();
+            SceneSwitchWindow.Refresh();
+        }
     }
 }

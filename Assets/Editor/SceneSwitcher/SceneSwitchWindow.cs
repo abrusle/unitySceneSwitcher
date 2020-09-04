@@ -8,7 +8,15 @@ namespace AlexisBrusle.Editor.SceneSwitcher
     public class SceneSwitchWindow : EditorWindow
     {
         private static string[] _cachedScenePaths;
-        private string _activeScenePath;
+        private static string _activeScenePath;
+
+        private static SceneSwitchWindow Window => GetWindow<SceneSwitchWindow>();
+        
+        public static void Refresh()
+        {
+            Init();
+            Window?.Repaint();
+        }
 
         private void Init()
         {
@@ -20,13 +28,13 @@ namespace AlexisBrusle.Editor.SceneSwitcher
         {
             Init();
             EditorSceneManager.sceneOpened += OnSceneOpened;
-            SceneSwitchConfigWindow.ConfigurationSaved += Init;
+            SceneSwitchConfigWindow.ConfigurationSaved += Refresh;
         }
 
         private void OnDisable()
         {
             EditorSceneManager.sceneOpened -= OnSceneOpened;
-            SceneSwitchConfigWindow.ConfigurationSaved -= Init;
+            SceneSwitchConfigWindow.ConfigurationSaved -= Refresh;
         }
 
         private void OnSceneOpened(Scene scene, OpenSceneMode mode)
@@ -37,7 +45,7 @@ namespace AlexisBrusle.Editor.SceneSwitcher
         [MenuItem("Window/Scene Switcher")]
         private static void ShowWindow()
         {
-            var window = GetWindow<SceneSwitchWindow>();
+            var window = Window;
             window.titleContent = new GUIContent("Scene Switcher");
             window.autoRepaintOnSceneChange = true;
             window.minSize = new Vector2(window.minSize.x, 45);
@@ -68,13 +76,13 @@ namespace AlexisBrusle.Editor.SceneSwitcher
             menu.AddDisabledItem(new GUIContent("General Options"));
             menu.AddSeparator("");
             menu.AddItem(new GUIContent("Refresh"), false, OnEnable);
-            menu.AddItem(new GUIContent("Configure/Add & Remove Scenes"), false, SceneSwitchConfigWindow.ShowWindow);
+            menu.AddItem(new GUIContent("Add & Remove Scenes"), false, SceneSwitchConfigWindow.ShowWindow);
             menu.ShowAsContext();
         }
 
         private void DrawEmptySceneSelector()
         {
-            EditorGUILayout.HelpBox("No scene configured. Right-click here and go to “Configure/Add & Remove Scenes” begin.", MessageType.Info);
+            EditorGUILayout.HelpBox("No scene configured. Right-click here and go to “Add & Remove Scenes” begin.", MessageType.Info);
         }
 
         private void DrawSceneSelector()
