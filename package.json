@@ -7,5 +7,8 @@
         "name": "Alexis Brusle",
         "email": "alexis.brusle@gmail.com",
         "url": "https://github.com/abrusle"
+    },
+    "dependencies": {
+        "Newtonsoft.Json": "12.0.3"
     }
 }
