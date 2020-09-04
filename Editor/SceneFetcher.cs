@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using UnityEditor;
+using UnityEngine;
 
 namespace AlexisBrusle.Editor.SceneSwitcher
 {
@@ -16,11 +16,11 @@ namespace AlexisBrusle.Editor.SceneSwitcher
                 if (!EditorPrefs.HasKey(EditorPrefKey))
                     ScenePaths = new string[0];
                 var json = EditorPrefs.GetString(EditorPrefKey);
-                return JsonConvert.DeserializeObject<string[]>(json);
+                return JsonUtility.FromJson<string[]>(json);
             }
             private set
             {
-                string json = JsonConvert.SerializeObject(value);
+                string json = JsonUtility.ToJson(value);
                 EditorPrefs.SetString(EditorPrefKey, json);
             }
         }

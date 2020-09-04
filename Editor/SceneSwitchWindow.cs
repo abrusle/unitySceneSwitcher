@@ -18,7 +18,7 @@ namespace AlexisBrusle.Editor.SceneSwitcher
             Window?.Repaint();
         }
 
-        private void Init()
+        private static void Init()
         {
             _cachedScenePaths = SceneFetcher.ScenePaths;
             _activeScenePath = EditorSceneManager.GetActiveScene().path;
