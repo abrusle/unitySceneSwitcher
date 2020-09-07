@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace AlexisBrusle.Editor.SceneSwitcher
+namespace Abrusle.Editor.SceneSwitcher
 {
     internal static class SceneFetcher
     {
@@ -16,7 +16,16 @@ namespace AlexisBrusle.Editor.SceneSwitcher
                 if (!EditorPrefs.HasKey(EditorPrefKey))
                     ScenePaths = new string[0];
                 var json = EditorPrefs.GetString(EditorPrefKey);
-                var data = JsonUtility.FromJson<SaveData>(json);
+                SaveData data;
+                try
+                {
+                    data = JsonUtility.FromJson<SaveData>(json);
+                }
+                catch (System.ArgumentException)
+                {
+                    data = new SaveData();
+                    ScenePaths = new string[0];
+                }
                 Debug.Log("Get: " + json);
                 return data.scenePaths ?? new string[0];
             }

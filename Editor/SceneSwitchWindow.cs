@@ -3,16 +3,16 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace AlexisBrusle.Editor.SceneSwitcher
+namespace Abrusle.Editor.SceneSwitcher
 {
     public class SceneSwitchWindow : EditorWindow
     {
-        private static string[] _cachedScenePaths;
+        private static string[] _cachedScenePaths = new string[0];
         private static string _activeScenePath;
         private Texture2D normalBackground;
 
         private static SceneSwitchWindow Window => GetWindow<SceneSwitchWindow>();
-        
+
         public static void Refresh()
         {
             Init();
@@ -56,19 +56,44 @@ namespace AlexisBrusle.Editor.SceneSwitcher
 
         private void OnGUI()
         {
+            ListenForUserInput();
+
+            using (new EditorGUI.DisabledScope(Application.isPlaying))
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                GUILayout.Space(LayoutSettings.Margins.left);
+                using (new EditorGUILayout.VerticalScope())
+                {
+                    GUILayout.Space(LayoutSettings.Margins.top);
+                
+                    if (_cachedScenePaths.Length == 0)
+                        DrawEmptySceneSelector();
+                    else
+                        DrawSceneSelector();
+                
+                    GUILayout.Space(LayoutSettings.Margins.bottom);
+                }
+                GUILayout.Space(LayoutSettings.Margins.right);
+            }
+
+            float height = LayoutSettings.Margins.vertical + (_cachedScenePaths.Length == 0
+                ? LayoutSettings.EmptyWindowHeight
+                : LayoutSettings.Height);
+            
+            minSize = new Vector2(minSize.x, height);
+            
+            maxSize = new Vector2(maxSize.x, height);
+            
+            
+        }
+
+        private void ListenForUserInput()
+        {
             var e = Event.current;
             if (e.button == 1 && e.isMouse)
             {
                 e.Use();
                 DrawGenericMenu();
-            }
-            
-            using (new EditorGUI.DisabledScope(Application.isPlaying))
-            {
-                if (_cachedScenePaths.Length == 0) 
-                    DrawEmptySceneSelector();
-                else 
-                    DrawSceneSelector();
             }
         }
 
@@ -84,7 +109,8 @@ namespace AlexisBrusle.Editor.SceneSwitcher
 
         private void DrawEmptySceneSelector()
         {
-            EditorGUILayout.HelpBox("No scene configured. Right-click here and go to “Add & Remove Scenes” begin.", MessageType.Info);
+            EditorGUILayout.HelpBox("No scene configured. Right-click here and go to “Add & Remove Scenes” begin.",
+                MessageType.Info);
         }
 
         private void DrawSceneSelector()
@@ -102,7 +128,7 @@ namespace AlexisBrusle.Editor.SceneSwitcher
         private void DrawSceneButton(string scenePath, int i)
         {
             string sceneName = SceneNameFromPath(scenePath);
-            if (GUILayout.Button(sceneName, GetButtonStyle(scenePath, i), GUILayout.Height(20)))
+            if (GUILayout.Button(sceneName, GetButtonStyle(scenePath, i), GUILayout.Height(LayoutSettings.Height)))
             {
                 OnSceneButtonClick(scenePath);
             }
@@ -124,11 +150,14 @@ namespace AlexisBrusle.Editor.SceneSwitcher
 
         private GUIStyle GetButtonStyle(string scenePath, int buttonIndex)
         {
-            string baseStyle = buttonIndex == _cachedScenePaths.Length - 1
-                ? "ButtonRight"
-                : buttonIndex == 0
-                    ? "ButtonLeft"
-                    : "ButtonMid";
+            string baseStyle =
+                _cachedScenePaths.Length == 1
+                    ? "Button"
+                    : buttonIndex == _cachedScenePaths.Length - 1
+                        ? "ButtonRight"
+                        : buttonIndex == 0
+                            ? "ButtonLeft"
+                            : "ButtonMid";
             var style = new GUIStyle(baseStyle);
             if (_activeScenePath == scenePath)
             {
@@ -140,11 +169,18 @@ namespace AlexisBrusle.Editor.SceneSwitcher
             {
                 GUI.backgroundColor = Color.white;
             }
-            #else
+#else
                 style.normal.background = style.active.background;
             }
 #endif
             return style;
+        }
+
+        private struct LayoutSettings
+        {
+            public const float Height = 20;
+            public static readonly RectOffset Margins = new RectOffset(5, 5, 5, 5);
+            public const float EmptyWindowHeight = 25;
         }
     }
 }
