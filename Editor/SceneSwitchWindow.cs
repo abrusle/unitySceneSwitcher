@@ -7,7 +7,7 @@ namespace Abrusle.Editor.SceneSwitcher
 {
     public class SceneSwitchWindow : EditorWindow
     {
-        private static string[] _cachedScenePaths = new string[0];
+        private static SceneAsset[] _cachedSceneAssets = new SceneAsset[0];
         private static string _activeScenePath;
         private Texture2D normalBackground;
 
@@ -21,7 +21,7 @@ namespace Abrusle.Editor.SceneSwitcher
 
         private static void Init()
         {
-            _cachedScenePaths = SceneFetcher.ScenePaths;
+            _cachedSceneAssets = SceneSwitchConfig.Instance.sceneAssets.ToArray();
             _activeScenePath = EditorSceneManager.GetActiveScene().path;
         }
 
@@ -66,7 +66,7 @@ namespace Abrusle.Editor.SceneSwitcher
                 {
                     GUILayout.Space(LayoutSettings.Margins.top);
                 
-                    if (_cachedScenePaths.Length == 0)
+                    if (_cachedSceneAssets.Length == 0)
                         DrawEmptySceneSelector();
                     else
                         DrawSceneSelector();
@@ -76,7 +76,7 @@ namespace Abrusle.Editor.SceneSwitcher
                 GUILayout.Space(LayoutSettings.Margins.right);
             }
 
-            float height = LayoutSettings.Margins.vertical + (_cachedScenePaths.Length == 0
+            float height = LayoutSettings.Margins.vertical + (_cachedSceneAssets.Length == 0
                 ? LayoutSettings.EmptyWindowHeight
                 : LayoutSettings.Height);
             
@@ -117,9 +117,9 @@ namespace Abrusle.Editor.SceneSwitcher
         {
             using (new EditorGUILayout.HorizontalScope())
             {
-                for (var i = 0; i < _cachedScenePaths.Length; i++)
+                for (var i = 0; i < _cachedSceneAssets.Length; i++)
                 {
-                    string scenePath = _cachedScenePaths[i];
+                    string scenePath = AssetDatabase.GetAssetPath(_cachedSceneAssets[i]);
                     DrawSceneButton(scenePath, i);
                 }
             }
@@ -151,9 +151,9 @@ namespace Abrusle.Editor.SceneSwitcher
         private GUIStyle GetButtonStyle(string scenePath, int buttonIndex)
         {
             string baseStyle =
-                _cachedScenePaths.Length == 1
+                _cachedSceneAssets.Length == 1
                     ? "Button"
-                    : buttonIndex == _cachedScenePaths.Length - 1
+                    : buttonIndex == _cachedSceneAssets.Length - 1
                         ? "ButtonRight"
                         : buttonIndex == 0
                             ? "ButtonLeft"

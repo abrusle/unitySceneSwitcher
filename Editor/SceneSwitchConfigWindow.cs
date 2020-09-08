@@ -14,9 +14,7 @@ namespace Abrusle.Editor.SceneSwitcher
 
         private void OnEnable()
         {
-            _sceneAssets = SceneFetcher.ScenePaths
-                .Select(AssetDatabase.LoadAssetAtPath<SceneAsset>)
-                .ToList();
+            _sceneAssets = SceneSwitchConfig.Instance.sceneAssets;
             SetWindowSize();
         }
 
@@ -109,7 +107,7 @@ namespace Abrusle.Editor.SceneSwitcher
                 
                 if (GUILayout.Button("Save", GUILayout.ExpandWidth(false), GUILayout.MinWidth(50), GUILayout.Height(25)))
                 {
-                    SceneFetcher.SaveScenes(_sceneAssets);
+                    SceneSwitchConfig.Instance.sceneAssets = _sceneAssets;
                     ConfigurationSaved?.Invoke();
                     Close();
                 }
