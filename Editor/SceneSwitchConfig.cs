@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace Abrusle.Editor.SceneSwitcher
 {
-    [CreateAssetMenu(fileName = "new Scene Switch Configuration", menuName = "Scene Switcher/Configuration file")]
+    // [CreateAssetMenu(fileName = "new Scene Switch Configuration", menuName = "Scene Switcher/Configuration file")]
     internal class SceneSwitchConfig : ScriptableObject
     {
         private const string Guid = "8bbb0eb201d484f2787a3b382fa06a65";
@@ -23,5 +22,15 @@ namespace Abrusle.Editor.SceneSwitcher
         }
         
         public List<SceneAsset> sceneAssets;
+
+        [UnityEditor.CustomEditor(typeof(SceneSwitchConfig))]
+        private class CustomEditor : UnityEditor.Editor
+        {
+            public override void OnInspectorGUI()
+            {
+                using (new EditorGUI.DisabledScope(true))
+                    DrawDefaultInspector();
+            }
+        }
     }
 }

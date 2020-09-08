@@ -8,115 +8,45 @@ namespace Abrusle.Editor.SceneSwitcher
 {
     internal class SceneSwitchConfigWindow : EditorWindow
     {
-        public static event Action ConfigurationSaved;
+        private SceneSwitchConfigUi _configUi;
 
-        private List<SceneAsset> _sceneAssets = new List<SceneAsset>();
-
-        private void OnEnable()
-        {
-            _sceneAssets = SceneSwitchConfig.Instance.sceneAssets;
-            SetWindowSize();
-        }
-
-        [MenuItem("Tools/Scene Switcher/Configure Scenes")]
+        [MenuItem("Window/Scene Switcher/Configuration Window")]
         public static void ShowWindow()
         {
             var w = GetWindow<SceneSwitchConfigWindow>();
             w.titleContent = new GUIContent("Scene Switcher Configuration");
-            float height = w.GetHeight();
+            float height = GetHeight(SceneSwitchConfig.Instance.sceneAssets.Count);
             w.position = new Rect(100, 100, 300, height);
             w.minSize = new Vector2(300, height);
+            w.Init();
             w.ShowPopup();
+        }
+
+        private void Init()
+        {
+            _configUi = new SceneSwitchConfigUi(SceneSwitchConfig.Instance.sceneAssets);
+            SetWindowSize(_configUi.DisplayingScenes.Count);
+
+            _configUi.LayoutChanged += () => SetWindowSize(_configUi.DisplayingScenes.Count);
+            _configUi.RefreshClick += () => _configUi.UpdateData(SceneSwitchConfig.Instance.sceneAssets);
+            _configUi.CancelClick += Close;
+            _configUi.SaveClick += scenes =>
+            {
+                SceneSwitchConfig.Instance.sceneAssets = scenes.ToList();
+                QuickScenesWindow.Refresh();
+                Close();
+            };
         }
 
         private void OnGUI()
         {
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                GUILayout.Space(LayoutSettings.Margin.left);
-                using (new EditorGUILayout.VerticalScope())
-                {
-                    GUILayout.Space(LayoutSettings.Margin.top);
-                    
-                    DrawSceneAssetList();
-                    DrawFooter();
-                    
-                    GUILayout.Space(LayoutSettings.Margin.bottom);
-                }
-                GUILayout.Space(LayoutSettings.Margin.right);
-            }
+            if (_configUi == null) Init();
+            _configUi.Draw();
         }
 
-        private void DrawSceneAssetList()
+        private void SetWindowSize(int sceneCount)
         {
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                EditorGUILayout.LabelField("Quick Switch Scenes");
-                if (GUILayout.Button("Refresh", EditorStyles.miniButton, GUILayout.MaxWidth(60)))
-                    OnEnable();
-            }
-            
-            GUILayout.Space(10);
-            
-            if (_sceneAssets.Count == 0)
-                EditorGUILayout.LabelField("Press “+” to add Scene Assets...");
-            else
-            {
-                for (int i = 0; i < _sceneAssets.Count; i++)
-                    DrawSceneAssetField(i);
-            }
-
-            GUILayout.Space(5);
-            
-            if (GUILayout.Button("+", EditorStyles.miniButton))
-            {
-                _sceneAssets.Add(null);
-                SetWindowSize();
-            }
-        }
-
-        private void DrawSceneAssetField(int i)
-        {
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                var sceneAsset = _sceneAssets[i];
-                _sceneAssets[i] = EditorGUILayout.ObjectField(
-                    GUIContent.none, 
-                    sceneAsset,
-                    typeof(SceneAsset),
-                    false) as SceneAsset;
-
-                if (GUILayout.Button("x", EditorStyles.miniButton, GUILayout.Width(20)))
-                {
-                    _sceneAssets.RemoveAt(i);
-                    SetWindowSize();
-                }
-            }
-        }
-
-        private void DrawFooter()
-        {
-            GUILayout.Space(LayoutSettings.SectionSpacing);
-            
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                if (GUILayout.Button("Cancel", GUILayout.ExpandWidth(false), GUILayout.MinWidth(50), GUILayout.Height(25)))
-                    Close();
-                
-                GUILayout.FlexibleSpace();
-                
-                if (GUILayout.Button("Save", GUILayout.ExpandWidth(false), GUILayout.MinWidth(50), GUILayout.Height(25)))
-                {
-                    SceneSwitchConfig.Instance.sceneAssets = _sceneAssets;
-                    ConfigurationSaved?.Invoke();
-                    Close();
-                }
-            }
-        }
-
-        private void SetWindowSize()
-        {
-            float height = GetHeight();
+            float height = GetHeight(sceneCount);
             position = new Rect(position)
             {
                 height = height
@@ -125,15 +55,9 @@ namespace Abrusle.Editor.SceneSwitcher
             maxSize = new Vector2(maxSize.x, height);
         }
 
-        private float GetHeight()
+        private static float GetHeight(int sceneCount)
         {
-            return 80 + Mathf.Max(1, _sceneAssets.Count) * 20 + 35;
-        }
-
-        private struct LayoutSettings
-        {
-            public static readonly RectOffset Margin = new RectOffset(10, 10, 10, 10);
-            public const float SectionSpacing = 15;
+            return 80 + Mathf.Max(1, sceneCount) * 20 + 35;
         }
     }
 }

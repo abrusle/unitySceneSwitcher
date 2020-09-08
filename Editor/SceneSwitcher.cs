@@ -30,8 +30,8 @@ namespace Abrusle.Editor.SceneSwitcher
             config.sceneAssets.Remove(sceneAsset);
         }
         
-        [MenuItem("CONTEXT/SceneAsset/Add to Scene Switcher")]
-        [MenuItem("Assets/Add to Scene Switcher", false, 111)]
+        [MenuItem("CONTEXT/SceneAsset/Add to Quick Scenes")]
+        [MenuItem("Assets/Add to Quick Scenes", false, 111)]
         private static void AddSceneFromEditorUi(MenuCommand cmd)
         {
             if (Selection.assetGUIDs.Length == 1)

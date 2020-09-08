@@ -5,13 +5,12 @@ using UnityEngine.SceneManagement;
 
 namespace Abrusle.Editor.SceneSwitcher
 {
-    public class SceneSwitchWindow : EditorWindow
+    public class QuickScenesWindow : EditorWindow
     {
         private static SceneAsset[] _cachedSceneAssets = new SceneAsset[0];
         private static string _activeScenePath;
-        private Texture2D normalBackground;
 
-        private static SceneSwitchWindow Window => GetWindow<SceneSwitchWindow>();
+        private static QuickScenesWindow Window => GetWindow<QuickScenesWindow>();
 
         public static void Refresh()
         {
@@ -29,14 +28,11 @@ namespace Abrusle.Editor.SceneSwitcher
         {
             Init();
             EditorSceneManager.sceneOpened += OnSceneOpened;
-            SceneSwitchConfigWindow.ConfigurationSaved += Refresh;
-            normalBackground = Texture2D.redTexture;
         }
 
         private void OnDisable()
         {
             EditorSceneManager.sceneOpened -= OnSceneOpened;
-            SceneSwitchConfigWindow.ConfigurationSaved -= Refresh;
         }
 
         private void OnSceneOpened(Scene scene, OpenSceneMode mode)
@@ -44,11 +40,11 @@ namespace Abrusle.Editor.SceneSwitcher
             _activeScenePath = scene.path;
         }
 
-        [MenuItem("Window/Scene Switcher")]
+        [MenuItem("Window/Scene Switcher/Quick Scenes")]
         private static void ShowWindow()
         {
             var window = Window;
-            window.titleContent = new GUIContent("Scene Switcher");
+            window.titleContent = new GUIContent("Quick Scenes");
             window.autoRepaintOnSceneChange = true;
             window.minSize = new Vector2(window.minSize.x, 45);
             window.Show();
@@ -103,7 +99,7 @@ namespace Abrusle.Editor.SceneSwitcher
             menu.AddDisabledItem(new GUIContent("General Options"));
             menu.AddSeparator("");
             menu.AddItem(new GUIContent("Refresh"), false, OnEnable);
-            menu.AddItem(new GUIContent("Add & Remove Scenes"), false, SceneSwitchConfigWindow.ShowWindow);
+            menu.AddItem(new GUIContent("Change Quick Scenes..."), false, SceneSwitchConfigWindow.ShowWindow);
             menu.ShowAsContext();
         }
 
