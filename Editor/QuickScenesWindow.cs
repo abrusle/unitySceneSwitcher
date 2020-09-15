@@ -14,13 +14,14 @@ namespace Abrusle.Editor.SceneSwitcher
 
         public static void Refresh()
         {
+            if (!HasOpenInstances<QuickScenesWindow>()) return;
             Init();
             Window?.Repaint();
         }
 
         private static void Init()
         {
-            _cachedSceneAssets = SceneSwitchConfig.Instance.sceneAssets.ToArray();
+            _cachedSceneAssets = ConfigData.Instance.sceneAssets.ToArray();
             _activeScenePath = EditorSceneManager.GetActiveScene().path;
         }
 
@@ -99,7 +100,7 @@ namespace Abrusle.Editor.SceneSwitcher
             menu.AddDisabledItem(new GUIContent("General Options"));
             menu.AddSeparator("");
             menu.AddItem(new GUIContent("Refresh"), false, OnEnable);
-            menu.AddItem(new GUIContent("Change Quick Scenes..."), false, SceneSwitchConfigWindow.ShowWindow);
+            menu.AddItem(new GUIContent("Change Quick Scenes..."), false, QuickScenesConfigPopUp.ShowWindow);
             menu.ShowAsContext();
         }
 

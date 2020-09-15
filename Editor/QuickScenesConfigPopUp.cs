@@ -6,16 +6,16 @@ using UnityEngine;
 
 namespace Abrusle.Editor.SceneSwitcher
 {
-    internal class SceneSwitchConfigWindow : EditorWindow
+    internal class QuickScenesConfigPopUp : EditorWindow
     {
-        private SceneSwitchConfigUi _configUi;
+        private QuickScenesConfigUi _configUi;
 
         [MenuItem("Window/Scene Switcher/Configuration Window")]
         public static void ShowWindow()
         {
-            var w = GetWindow<SceneSwitchConfigWindow>();
+            var w = GetWindow<QuickScenesConfigPopUp>();
             w.titleContent = new GUIContent("Scene Switcher Configuration");
-            float height = GetHeight(SceneSwitchConfig.Instance.sceneAssets.Count);
+            float height = GetHeight(ConfigData.Instance.sceneAssets.Count);
             w.position = new Rect(100, 100, 300, height);
             w.minSize = new Vector2(300, height);
             w.Init();
@@ -24,15 +24,15 @@ namespace Abrusle.Editor.SceneSwitcher
 
         private void Init()
         {
-            _configUi = new SceneSwitchConfigUi(SceneSwitchConfig.Instance.sceneAssets);
+            _configUi = new QuickScenesConfigUi(ConfigData.Instance.sceneAssets);
             SetWindowSize(_configUi.DisplayingScenes.Count);
 
             _configUi.LayoutChanged += () => SetWindowSize(_configUi.DisplayingScenes.Count);
-            _configUi.RefreshClick += () => _configUi.UpdateData(SceneSwitchConfig.Instance.sceneAssets);
+            _configUi.RefreshClick += () => _configUi.UpdateData(ConfigData.Instance.sceneAssets);
             _configUi.CancelClick += Close;
             _configUi.SaveClick += scenes =>
             {
-                SceneSwitchConfig.Instance.sceneAssets = scenes.ToList();
+                ConfigData.Instance.sceneAssets = scenes.ToList();
                 QuickScenesWindow.Refresh();
                 Close();
             };

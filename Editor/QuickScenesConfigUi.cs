@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Abrusle.Editor.SceneSwitcher
 {
-    internal sealed class SceneSwitchConfigUi
+    internal sealed class QuickScenesConfigUi
     {
         public event Action LayoutChanged;
         public event Action<SceneAsset[]> SaveClick;
@@ -16,7 +16,7 @@ namespace Abrusle.Editor.SceneSwitcher
         public IReadOnlyCollection<SceneAsset> DisplayingScenes => _sceneAssets;
         private List<SceneAsset> _sceneAssets;
 
-        public SceneSwitchConfigUi(IEnumerable<SceneAsset> sceneAssets)
+        public QuickScenesConfigUi(IEnumerable<SceneAsset> sceneAssets)
         {
             UpdateData(sceneAssets);
         }
