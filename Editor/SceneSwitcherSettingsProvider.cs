@@ -9,7 +9,7 @@ namespace Abrusle.Editor.SceneSwitcher
         private readonly QuickScenesConfigUi _configUi;
         
         /// <inheritdoc />
-        private SceneSwitcherSettingsProvider(string path, SettingsScope scopes = SettingsScope.User, IEnumerable<string> keywords = null) : base(path, scopes, keywords)
+        private SceneSwitcherSettingsProvider(IEnumerable<string> keywords = null) : base("Preferences/Scene Switcher", SettingsScope.User, keywords)
         {
             _configUi = new QuickScenesConfigUi(ConfigData.Instance.sceneAssets);
             _configUi.RefreshClick += () => _configUi.UpdateData(ConfigData.Instance.sceneAssets);
@@ -30,7 +30,7 @@ namespace Abrusle.Editor.SceneSwitcher
         [SettingsProvider]
         public static SettingsProvider CreateSettings()
         {
-            return new SceneSwitcherSettingsProvider("Package Preferences/Scene Switcher")
+            return new SceneSwitcherSettingsProvider
             {
                 keywords = GetSearchKeywordsFromSerializedObject(new SerializedObject(ConfigData.Instance))
             };

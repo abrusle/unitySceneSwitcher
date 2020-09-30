@@ -10,7 +10,6 @@ namespace Abrusle.Editor.SceneSwitcher
     {
         private QuickScenesConfigUi _configUi;
 
-        [MenuItem("Window/Scene Switcher/Configuration Window")]
         public static void ShowWindow()
         {
             var w = GetWindow<QuickScenesConfigPopUp>();

@@ -60,22 +60,42 @@ namespace Abrusle.Editor.SceneSwitcher
             else
             {
                 for (int i = 0; i < _sceneAssets.Count; i++)
-                    DrawSceneAssetField(i);
+                {
+                    if (i != 0) GUILayout.Space(2.5f);
+                    DrawSceneAssetLine(i);
+                }
             }
 
             GUILayout.Space(5);
             
-            if (GUILayout.Button("+", EditorStyles.miniButton))
+            if (GUILayout.Button(new GUIContent("+", "Add a scene asset"), EditorStyles.miniButton))
             {
                 _sceneAssets.Add(null);
                 LayoutChanged?.Invoke();
             }
         }
 
-        private void DrawSceneAssetField(int i)
+        private void DrawSceneAssetLine(int i)
         {
             using (new EditorGUILayout.HorizontalScope())
             {
+                var moveButtonStyle = new GUIStyle(EditorStyles.miniButton) {fontSize = 8};
+                using (new EditorGUI.DisabledScope(_sceneAssets.Count < 2 || i == 0))
+                    if (GUILayout.Button(new GUIContent("\u25B2", "Move Up"), moveButtonStyle, GUILayout.Width(20)))
+                    {
+                        var thisAsset = _sceneAssets[i];
+                        _sceneAssets[i] = _sceneAssets[i - 1];
+                        _sceneAssets[i - 1] = thisAsset;
+                    }
+                
+                using (new EditorGUI.DisabledScope(_sceneAssets.Count < 2 || i == _sceneAssets.Count - 1))
+                    if (GUILayout.Button(new GUIContent("\u25BC", "Move Down"), moveButtonStyle, GUILayout.Width(20)))
+                    {
+                        var thisAsset = _sceneAssets[i];
+                        _sceneAssets[i] = _sceneAssets[i + 1];
+                        _sceneAssets[i + 1] = thisAsset;
+                    }
+                
                 var sceneAsset = _sceneAssets[i];
                 _sceneAssets[i] = EditorGUILayout.ObjectField(
                     GUIContent.none, 
@@ -83,7 +103,7 @@ namespace Abrusle.Editor.SceneSwitcher
                     typeof(SceneAsset),
                     false) as SceneAsset;
 
-                if (GUILayout.Button("x", EditorStyles.miniButton, GUILayout.Width(20)))
+                if (GUILayout.Button(new GUIContent("\u00D7", "Remove asset from list"), EditorStyles.miniButton, GUILayout.Width(20)))
                 {
                     _sceneAssets.RemoveAt(i);
                     LayoutChanged?.Invoke();
@@ -97,12 +117,12 @@ namespace Abrusle.Editor.SceneSwitcher
             
             using (new EditorGUILayout.HorizontalScope())
             {
-                if (GUILayout.Button("Cancel", GUILayout.ExpandWidth(false), GUILayout.MinWidth(50), GUILayout.Height(25)))
+                if (GUILayout.Button(new GUIContent("Cancel", "Discard changes to the list."), GUILayout.ExpandWidth(false), GUILayout.MinWidth(50), GUILayout.Height(25)))
                     CancelClick?.Invoke();
                 
                 GUILayout.FlexibleSpace();
                 
-                if (GUILayout.Button("Save", GUILayout.ExpandWidth(false), GUILayout.MinWidth(50), GUILayout.Height(25)))
+                if (GUILayout.Button(new GUIContent("Save", "Save current list as quick scenes."), GUILayout.ExpandWidth(false), GUILayout.MinWidth(50), GUILayout.Height(25)))
                 {
                     SaveClick?.Invoke(_sceneAssets.ToArray());
                 }

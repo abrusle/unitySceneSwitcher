@@ -117,6 +117,7 @@ namespace Abrusle.Editor.SceneSwitcher
                 for (var i = 0; i < _cachedSceneAssets.Length; i++)
                 {
                     string scenePath = AssetDatabase.GetAssetPath(_cachedSceneAssets[i]);
+                    if (string.IsNullOrWhiteSpace(scenePath)) return;
                     DrawSceneButton(scenePath, i);
                 }
             }
@@ -125,7 +126,8 @@ namespace Abrusle.Editor.SceneSwitcher
         private void DrawSceneButton(string scenePath, int i)
         {
             string sceneName = SceneNameFromPath(scenePath);
-            if (GUILayout.Button(sceneName, GetButtonStyle(scenePath, i), GUILayout.Height(LayoutSettings.Height)))
+            var content = new GUIContent(sceneName, $"Click to open {sceneName}.\n({scenePath})\n\nRight-click anywhere for more options.");
+            if (GUILayout.Button(content, GetButtonStyle(scenePath, i), GUILayout.Height(LayoutSettings.Height)))
             {
                 OnSceneButtonClick(scenePath);
             }
