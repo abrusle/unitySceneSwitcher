@@ -10,6 +10,5 @@
         "url": "https://github.com/abrusle"
     },
     "dependencies": {
-        "Newtonsoft.Json": "12.0.3"
     }
 }
