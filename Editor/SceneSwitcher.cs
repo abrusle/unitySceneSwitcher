@@ -9,15 +9,15 @@ namespace Abrusle.Editor.SceneSwitcher
         public static void AddScene(SceneAsset sceneAsset)
         {
             if (sceneAsset == null) return;
-            var config = ConfigData.Instance;
-            if (!config.sceneAssets.Contains(sceneAsset))
-                config.sceneAssets.Add(sceneAsset);
+            var config = ConfigData.instance;
+            if (!config.SceneAssets.Contains(sceneAsset))
+                config.SceneAssets.Add(sceneAsset);
         }
 
         public static void AddScenes(IEnumerable<SceneAsset> sceneAssets)
         {
-            var config = ConfigData.Instance;
-            config.sceneAssets = config.sceneAssets
+            var config = ConfigData.instance;
+            config.SceneAssets = config.SceneAssets
                 .Concat(sceneAssets)
                 .Distinct()
                 .Where(s => s != null)
@@ -26,7 +26,7 @@ namespace Abrusle.Editor.SceneSwitcher
 
         public static void RemoveScene(SceneAsset sceneAsset)
         {
-            ConfigData.Instance.sceneAssets.Remove(sceneAsset);
+            ConfigData.instance.SceneAssets.Remove(sceneAsset);
         }
         
         [MenuItem("CONTEXT/SceneAsset/Add to Quick Scenes")]
@@ -48,6 +48,5 @@ namespace Abrusle.Editor.SceneSwitcher
             var path = AssetDatabase.GUIDToAssetPath(guid);
             return AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
         }
-
     }
 }

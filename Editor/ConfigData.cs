@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -6,28 +5,22 @@ using UnityEngine;
 
 namespace Abrusle.Editor.SceneSwitcher
 {
-    // [CreateAssetMenu(fileName = "new Scene Switch Configuration", menuName = "Scene Switcher/Configuration file")]
-    internal class ConfigData : ScriptableObject
+    [FilePath("UserSettings/QuickScenes.asset", FilePathAttribute.Location.ProjectFolder)]
+    internal class ConfigData : ScriptableSingleton<ConfigData>
     {
-        #region Singleton
-
-        private const string Guid = "8bbb0eb201d484f2787a3b382fa06a65";
-
-        private static ConfigData _instance;
-
-        internal static ConfigData Instance
+        public List<SceneAsset> SceneAssets
         {
-            get
+            get => sceneAssets;
+            set
             {
-                if (_instance == null)
-                    _instance = AssetDatabase.LoadAssetAtPath<ConfigData>(AssetDatabase.GUIDToAssetPath(Guid));
-                return _instance;
+                if (sceneAssets == value) return;
+                sceneAssets = value;
+                Save(true);
             }
         }
 
-        #endregion
-        
-        public List<SceneAsset> sceneAssets;
+        [SerializeField]
+        private List<SceneAsset> sceneAssets = new List<SceneAsset>();
 
         [UnityEditor.CustomEditor(typeof(ConfigData))]
         private class CustomEditor : UnityEditor.Editor
@@ -38,14 +31,14 @@ namespace Abrusle.Editor.SceneSwitcher
 
             private void OnEnable()
             {
-                _configUi = new QuickScenesConfigUi(Target.sceneAssets);
+                _configUi = new QuickScenesConfigUi(Target.SceneAssets);
                 _configUi.RefreshClick += OnConfigRefreshClick;
                 _configUi.SaveClick += OnConfigSaveClick;
             }
 
             private void OnConfigSaveClick(SceneAsset[] scenes)
             {
-                Target.sceneAssets = scenes.ToList();
+                Target.SceneAssets = scenes.ToList();
                 QuickScenesWindow.Refresh();
             }
 
@@ -61,7 +54,7 @@ namespace Abrusle.Editor.SceneSwitcher
 
             private void OnConfigRefreshClick()
             {
-                _configUi.UpdateData(Target.sceneAssets);
+                _configUi.UpdateData(Target.SceneAssets);
             }
         }
     }

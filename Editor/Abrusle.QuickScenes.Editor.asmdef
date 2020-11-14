@@ -1,6 +1,6 @@
 {
-    "name": "Unity.SceneSwitcher.Editor",
-    "optionalUnityReferences": [],
+    "name": "Abrusle.QuickScenes.Editor",
+    "references": [],
     "includePlatforms": [
         "Editor"
     ],
@@ -10,5 +10,6 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": []
+    "versionDefines": [],
+    "noEngineReferences": false
 }

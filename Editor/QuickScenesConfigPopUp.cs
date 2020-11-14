@@ -14,7 +14,7 @@ namespace Abrusle.Editor.SceneSwitcher
         {
             var w = GetWindow<QuickScenesConfigPopUp>();
             w.titleContent = new GUIContent("Scene Switcher Configuration");
-            float height = GetHeight(ConfigData.Instance.sceneAssets.Count);
+            float height = GetHeight(ConfigData.instance.SceneAssets.Count);
             w.position = new Rect(100, 100, 300, height);
             w.minSize = new Vector2(300, height);
             w.Init();
@@ -23,15 +23,15 @@ namespace Abrusle.Editor.SceneSwitcher
 
         private void Init()
         {
-            _configUi = new QuickScenesConfigUi(ConfigData.Instance.sceneAssets);
+            _configUi = new QuickScenesConfigUi(ConfigData.instance.SceneAssets);
             SetWindowSize(_configUi.DisplayingScenes.Count);
 
             _configUi.LayoutChanged += () => SetWindowSize(_configUi.DisplayingScenes.Count);
-            _configUi.RefreshClick += () => _configUi.UpdateData(ConfigData.Instance.sceneAssets);
+            _configUi.RefreshClick += () => _configUi.UpdateData(ConfigData.instance.SceneAssets);
             _configUi.CancelClick += Close;
             _configUi.SaveClick += scenes =>
             {
-                ConfigData.Instance.sceneAssets = scenes.ToList();
+                ConfigData.instance.SceneAssets = scenes.ToList();
                 QuickScenesWindow.Refresh();
                 Close();
             };

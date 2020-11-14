@@ -21,7 +21,7 @@ namespace Abrusle.Editor.SceneSwitcher
 
         private static void Init()
         {
-            _cachedSceneAssets = ConfigData.Instance.sceneAssets.ToArray();
+            _cachedSceneAssets = ConfigData.instance.SceneAssets.ToArray();
             _activeScenePath = EditorSceneManager.GetActiveScene().path;
         }
 
@@ -41,7 +41,7 @@ namespace Abrusle.Editor.SceneSwitcher
             _activeScenePath = scene.path;
         }
 
-        [MenuItem("Window/Scene Switcher/Quick Scenes")]
+        [MenuItem("Window/Quick Scenes")]
         private static void ShowWindow()
         {
             var window = Window;
