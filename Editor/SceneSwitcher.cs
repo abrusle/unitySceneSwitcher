@@ -43,6 +43,18 @@ namespace Abrusle.Editor.SceneSwitcher
             }
         }
 
+        [MenuItem("Assets/Add to Quick Scenes", true, 111)]
+        private static bool CheckAddSceneFromEditorUi()
+        {
+            return Selection.assetGUIDs.Any(guid => LoadSceneAssetFromGuid(guid) != null);
+        }
+
+        [MenuItem("CONTEXT/SceneAsset/Add to Quick Scenes", true)]
+        private static bool CheckAddSceneFromContext(MenuCommand cmd)
+        {
+            return cmd.context is SceneAsset;
+        }
+
         private static SceneAsset LoadSceneAssetFromGuid(string guid)
         {
             var path = AssetDatabase.GUIDToAssetPath(guid);
