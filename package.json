@@ -1,9 +1,9 @@
 {
     "name": "com.abrusle.quick-scenes",
-    "displayName":"Quick Scenes",
-    "description":"Small tool for quickly switching between scenes in the editor.",
+    "displayName": "Quick Scenes",
+    "description": "Small tool for quickly switching between scenes in the editor.",
     "version": "0.2.0",
-    "unity":"2019.1",
+    "unity": "2019.1",
     "author": {
         "name": "Abrusle",
         "email": "public.abrusle@gmail.com",
