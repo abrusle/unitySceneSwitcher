@@ -28,7 +28,7 @@ More info: [Unity - Manual: Installing from a Git URL](https://docs.unity3d.com/
 2. If you don't plan on reinstalling _Quick Scenes_ in your project or you whish to reset its configuration: delete the configuration file located at `[path-to-your-unity-project]/UserSettings/QuickScenes.asset` .
 
 ## Additional information
-- _Quick Scenes_ is not meant to be used during Play Mode, thus its guid is disabled in Play Mode.
-- This package only affects the Unity Editor and has not effect on your game.
+- _Quick Scenes_ is not meant to be used during Play Mode, thus interaction with the Quick Scenes GUI is disabled in Play Mode.
+- This package only affects the Unity Editor and has no effect on your game.
 - This package does not create any file in the Assets folder.
 
